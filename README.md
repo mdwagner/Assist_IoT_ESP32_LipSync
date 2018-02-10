@@ -1,10 +1,12 @@
 This is a readme file for the LipSync_v2 code.
 
-Pull the code to your Arduino sketch directory as well as the ESP32 snippet from chegewara's repo.  Chegewara has created a custom BLE library specifically for HID BLE devices.
+Pull or unzip the code to your Arduino sketch directory
+
+Pull or unzip the ESP32 snippet code from chegewara's repo.  Chegewara has created a custom BLE library specifically for HID BLE devices.  The Arduino code is based on this.
 
 https://github.com/chegewara/esp32-snippets/releases
 
-For perspective below us the directory layout for the .ino code and the library:
+For perspective below us the directory layout for the .ino code, data files, and the library:
 
 User Directory.../Arduino/Lip_Sync_v2/Lip_Sync_v2.ino   <- Arduino Code
 
