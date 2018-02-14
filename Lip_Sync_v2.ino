@@ -221,8 +221,8 @@ const uint8_t mouse2_report[] = {
 
     //  The setAppearance function only changes what is passed in the adv packet...it does not set the communication protocol
     //pAdvertising->setAppearance(HID_KEYBOARD);
-    pAdvertising->setAppearance(HID_JOYSTICK);
-    //pAdvertising->setAppearance(HID_MOUSE);
+    //pAdvertising->setAppearance(HID_JOYSTICK);
+    pAdvertising->setAppearance(HID_MOUSE);
     pAdvertising->addServiceUUID(hid->hidService()->getUUID());
     pAdvertising->start();
 
