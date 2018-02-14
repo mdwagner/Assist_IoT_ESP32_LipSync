@@ -17,9 +17,15 @@
 #include <SPIFFS.h>
 
 
-#define LED_1 13                                   // LipSync LED Color1 : GREEN - digital output pin 4
-#define LED_2 15                                   // LipSync LED Color2 : RED - digital outputpin 5
-#define CONNECT_LED 5                                    // LED for visual confirmation that Peripheral is connected Central
+#define LED_1 23                                   // LipSync LED Color1 : GREEN - digital output pin 4
+#define LED_2 18                                   // LipSync LED Color2 : RED - digital outputpin 5
+#define CONNECT_LED 5                              // LED for visual confirmation that Peripheral is connected Central
+#define PUSH_BUTTON_CALI_MODE 14                   // JUMPER on the bread board.  This is being used temporarily until the final design work and testing is completed
+ 
+#define X_DIR_HIGH 36
+#define X_DIR_LOW 37
+#define Y_DIR_HIGH 38
+#define Y_DIR_LOW 39
 
 //State Machine States
 // state machine states
@@ -482,16 +488,21 @@ void setup() {
   adc1_config_channel_atten((adc1_channel_t)39, ADC_ATTEN_DB_11);
 
   pinMode(CONNECT_LED, OUTPUT);
-
+  pinMode(LED_1, OUTPUT);                         // visual feedback for init and calibration
+  pinMode(LED_2, OUTPUT);                         // visual feedback for init and calibration
+  pinMode(PUSH_BUTTON_CALI_MODE, INPUT_PULLUP);          // Connect Pin 11 to GND to put LipSync in calibration mode
+  
 //NOTE: Interrupt architecture on the ESP maybe different.  Strategy is to get mouse movement working then working the click events
-  pinMode(12, INPUT_PULLDOWN);
+  /*pinMode(12, INPUT_PULLDOWN);
   attachInterrupt(digitalPinToInterrupt(12), click, CHANGE);
   pinMode(13, INPUT_PULLDOWN);
   attachInterrupt(digitalPinToInterrupt(13), click, CHANGE);
   pinMode(32, INPUT_PULLDOWN);
-  attachInterrupt(digitalPinToInterrupt(32), click, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(32), click, CHANGE);*/
 
   xTaskCreate(taskServer, "server", 20000, NULL, 5, NULL);
+
+  blink(4, 250, 3);
 }
 
 void loop() {
@@ -499,12 +510,15 @@ void loop() {
   //server.handleClient();
   if(connected){
       digitalWrite(CONNECT_LED, HIGH); //When the connect event comes this LED goes high(ON)
+      if (digitalRead(PUSH_BUTTON_CALI_MODE) == LOW) {
+        Joystick_Calibration();
+      } else {
   
       
-      uint16_t xh = analogRead(36);  //A0 on the Aarduino Micro
-      uint16_t xl = analogRead(37);  //A1 on the Aarduino Micro
-      uint16_t yh = analogRead(38);  //A2 on the Aarduino Micro
-      uint16_t yl = analogRead(39);  //D10/A10 on the Aarduino Micro
+      uint16_t xh = analogRead(X_DIR_HIGH);  //A0 on the Aarduino Micro
+      uint16_t xl = analogRead(X_DIR_LOW);  //A1 on the Aarduino Micro
+      uint16_t yh = analogRead(Y_DIR_HIGH);  //A2 on the Aarduino Micro
+      uint16_t yl = analogRead(Y_DIR_LOW);  //D10/A10 on the Aarduino Micro
                                                                                                                                     //These notes are from the original developer.......
       xh_yh = sqrt(sq(((xh - x_right) > 0) ? (float)(xh - x_right) : 0.0) + sq(((yh - y_up) > 0) ? (float)(yh - y_up) : 0.0));     // sq() function raises input to power of 2, returning the same data type int->int ...
       xh_yl = sqrt(sq(((xh - x_right) > 0) ? (float)(xh - x_right) : 0.0) + sq(((yl - y_down) > 0) ? (float)(yl - y_down) : 0.0));   // the sqrt() function raises input to power 1/2, returning a float type
@@ -574,10 +588,173 @@ void loop() {
         }
         delay(50);
       }
-      }
+     }
     }
-   else digitalWrite(CONNECT_LED, LOW);
   }
+  else digitalWrite(CONNECT_LED, LOW);
+}
+
+   
+
+//***LED BLINK FUNCTIONS***//
+
+void blink(int num_Blinks, int delay_Blinks, int LED_number ) {
+  if (num_Blinks < 0) num_Blinks *= -1;
+
+  switch (LED_number) {
+    case 1: {
+        for (int i = 0; i < num_Blinks; i++) {
+          digitalWrite(LED_1, HIGH);
+          delay(delay_Blinks);
+          digitalWrite(LED_1, LOW);
+          delay(delay_Blinks);
+        }
+        break;
+      }
+    case 2: {
+        for (int i = 0; i < num_Blinks; i++) {
+          digitalWrite(LED_2, HIGH);
+          delay(delay_Blinks);
+          digitalWrite(LED_2, LOW);
+          delay(delay_Blinks);
+        }
+        break;
+      }
+    case 3: {
+        for (int i = 0; i < num_Blinks; i++) {
+          digitalWrite(LED_1, HIGH);
+          delay(delay_Blinks);
+          digitalWrite(LED_1, LOW);
+          delay(delay_Blinks);
+          digitalWrite(LED_2, HIGH);
+          delay(delay_Blinks);
+          digitalWrite(LED_2, LOW);
+          delay(delay_Blinks);
+        }
+        break;
+      }
+  }
+}
+
+//***JOYSTICK INITIALIZATION FUNCTION***//
+
+void Joystick_Initialization(void) {
+  xh = analogRead(X_DIR_HIGH);            // Initial neutral x-high value of joystick
+  delay(10);
+
+  xl = analogRead(X_DIR_LOW);             // Initial neutral x-low value of joystick
+  delay(10);
+
+  yh = analogRead(Y_DIR_HIGH);            // Initial neutral y-high value of joystick
+  delay(10);
+
+  yl = analogRead(Y_DIR_LOW);             // Initial neutral y-low value of joystick
+  delay(10);
+
+  x_right = xh;
+  x_left = xl;
+  y_up = yh;
+  y_down = yl;
+
+  EEPROM.get(6, yh_comp);
+  delay(10);
+  EEPROM.get(10, yl_comp);
+  delay(10);
+  EEPROM.get(14, xh_comp);
+  delay(10);
+  EEPROM.get(18, xl_comp);
+  delay(10);
+  EEPROM.get(22, xh_max);
+  delay(10);
+  EEPROM.get(24, xl_max);
+  delay(10);
+  EEPROM.get(26, yh_max);
+  delay(10);
+  EEPROM.get(28, yl_max);
+  delay(10);
+
+  constant_radius = 30.0;                       //40.0 works well for a constant radius
+
+  xh_yh_radius = constant_radius;
+  xh_yl_radius = constant_radius;
+  xl_yl_radius = constant_radius;
+  xl_yh_radius = constant_radius;
+
+}
+
+void Joystick_Calibration(void) {
+
+  Serial.println("Prepare for joystick calibration!");
+  Serial.println(" ");
+  blink(4, 300, 3);
+
+  Serial.println("Move mouthpiece to the furthest vertical up position and hold it there until the LED turns SOLID RED, then release the mouthpiece.");
+  blink(6, 500, 1);
+  yh_max = analogRead(Y_DIR_HIGH);
+  blink(1, 1000, 2);
+  Serial.println(yh_max);
+
+  Serial.println("Move mouthpiece to the furthest horizontal right position and hold it there until the LED turns SOLID RED, then release the mouthpiece.");
+  blink(6, 500, 1);
+  xh_max = analogRead(X_DIR_HIGH);
+  blink(1, 1000, 2);
+  Serial.println(xh_max);
+
+  Serial.println("Move mouthpiece to the furthest vertical down position and hold it there until the LED turns SOLID RED, then release the mouthpiece.");
+  blink(6, 500, 1);
+  yl_max = analogRead(Y_DIR_LOW);
+  blink(1, 1000, 2);
+  Serial.println(yl_max);
+
+  Serial.println("Move mouthpiece to the furthest horizontal left position and hold it there until the LED turns SOLID RED, then release the mouthpiece.");
+  blink(6, 500, 1);
+  xl_max = analogRead(X_DIR_LOW);
+  blink(1, 1000, 2);
+  Serial.println(xl_max);
+
+  int max1 = (xh_max > xl_max) ? xh_max : xl_max;
+  int max2 = (yh_max > yl_max) ? yh_max : yl_max;
+  float max_final = (max1 > max2) ? (float)max1 : (float)max2;
+
+  //int delta_max_total = (yh_max - y_up) + (yl_max - y_down) + (xh_max - x_right) + (xl_max - x_left);
+
+  Serial.print("max_final: ");
+  Serial.println(max_final);
+  Serial.println(" ");
+  Serial.println("REMOVE THE JUMPER QUICKLY WHILE THE LEDS ARE FLASHING!!!!!...");
+ 
+  //float avg_delta_max = ((float)(delta_max_total)) / 4;
+
+  //Serial.print("avg_delta_max: ");
+  //Serial.println(avg_delta_max);
+
+  yh_comp = (max_final - y_up) / (yh_max - y_up);
+  yl_comp = (max_final - y_down) / (yl_max - y_down);
+  xh_comp = (max_final - x_right) / (xh_max - x_right);
+  xl_comp = (max_final - x_left) / (xl_max - x_left);
+
+  EEPROM.put(6, yh_comp);
+  delay(10);
+  EEPROM.put(10, yl_comp);
+  delay(10);
+  EEPROM.put(14, xh_comp);
+  delay(10);
+  EEPROM.put(18, xl_comp);
+  delay(10);
+  EEPROM.put(22, xh_max);
+  delay(10);
+  EEPROM.put(24, xl_max);
+  delay(10);
+  EEPROM.put(26, yh_max);
+  delay(10);
+  EEPROM.put(28, yl_max);
+  delay(10);
+
+  blink(5, 250, 3);
+
+  Serial.println(" ");
+  Serial.println("Joystick speed calibration procedure is complete....");
+}
 
 IRAM_ATTR void click(){
   buttons = digitalRead(12)<<0 | digitalRead(13)<<1 | digitalRead(32)<<2;  
