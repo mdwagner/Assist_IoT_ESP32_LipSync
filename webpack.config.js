@@ -1,9 +1,12 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const CompressionPlugin = require('compression-webpack-plugin');
 
 const PATHS = {
-  src: path.join(__dirname, "src"),
-  build: path.join(__dirname, "build"),
+  src: path.join(__dirname, 'src', 'index.js'),
+  build: path.join(__dirname, 'build'),
 };
 
 module.exports = {
@@ -12,7 +15,7 @@ module.exports = {
   },
   output: {
     path: PATHS.build,
-    filename: "[name].js",
+    filename: '[name].js',
   },
   devServer: {
     stats: 'errors-only',
@@ -22,21 +25,31 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.html$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]'
-        }
+        test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/
+      },
+      {
+        test: /\.css$/, use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader'
+        }), exclude: /node_modules/
       }
     ]
   },
   plugins: [
+    new ExtractTextPlugin({
+      allChunks: true,
+      filename: '[name].css'
+    }),
+    new webpack.optimize.UglifyJsPlugin(),
     new HtmlWebpackPlugin({
-      title: "Webpack demo",
+      title: 'Welcome to the LipSync Omni Page',
+      template: 'template.html',
       minify: {
-        minifyCSS: true,
         removeComments: true
       }
+    }),
+    new CompressionPlugin({
+      test: /\.jsx?$/
     })
   ],
 };
