@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/mdwagner/Assist_IoT_ESP32_LipSync/issues"
   },
-  "homepage": "https://github.com/mdwagner/Assist_IoT_ESP32_LipSync#readme"
+  "homepage": "https://github.com/mdwagner/Assist_IoT_ESP32_LipSync#readme",
+  "devDependencies": {
+    "webpack": "^3.11.0"
+  }
 }
