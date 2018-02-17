@@ -22,19 +22,17 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.html$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]'
-        }
+        test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/
+      },
+      {
+        test: /\.s?css$/, loader: 'css-loader'
       }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: "Webpack demo",
+      template: 'src/index.ejs',
       minify: {
-        minifyCSS: true,
         removeComments: true
       }
     })
