@@ -1,5 +1,4 @@
 const path = require("path");
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const PATHS = {
@@ -32,10 +31,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: Infinity,
-    }),
     new HtmlWebpackPlugin({
       title: "Webpack demo",
       minify: {
