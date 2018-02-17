@@ -1,9 +1,10 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const PATHS = {
-  src: path.join(__dirname, "src"),
-  build: path.join(__dirname, "build"),
+  src: path.join(__dirname, 'src', 'index.js'),
+  build: path.join(__dirname, 'build'),
 };
 
 module.exports = {
@@ -25,13 +26,21 @@ module.exports = {
         test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/
       },
       {
-        test: /\.s?css$/, loader: 'css-loader'
+        test: /\.css$/, use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader'
+        }), exclude: /node_modules/
       }
     ]
   },
   plugins: [
+    new ExtractTextPlugin({
+      allChunks: true,
+      filename: '[name].css'
+    }),
     new HtmlWebpackPlugin({
-      template: 'src/index.ejs',
+      title: 'Welcome to the LipSync Omni Page',
+      template: 'src/template.html',
       minify: {
         removeComments: true
       }

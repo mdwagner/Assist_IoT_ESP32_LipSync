@@ -1,9 +1,6 @@
-// import Relay from './relay.html';
-
-// console.log('Hello world');
-
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './app.css';
 
 const App = () => (
   <div>
