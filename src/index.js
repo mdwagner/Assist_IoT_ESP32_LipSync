@@ -1,3 +1,6 @@
-import Relay from './relay.html';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App.js"
 
-console.log('Hello world');
+
+ReactDOM.render(<App />, document.getElementById("root"));
