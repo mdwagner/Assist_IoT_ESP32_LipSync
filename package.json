@@ -1,0 +1,37 @@
+{
+  "name": "assist_iot_esp32_lipsync",
+  "version": "0.0.1",
+  "description": "This is a readme file for the LipSync_v2 code.",
+  "main": "build/index.html",
+  "scripts": {
+    "prebuild": "rimraf build",
+    "build": "webpack",
+    "start": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdwagner/Assist_IoT_ESP32_LipSync.git"
+  },
+  "keywords": [
+    "arduino",
+    "esp32"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mdwagner/Assist_IoT_ESP32_LipSync/issues"
+  },
+  "homepage": "https://github.com/mdwagner/Assist_IoT_ESP32_LipSync#readme",
+  "devDependencies": {
+    "file-loader": "^1.1.6",
+    "html-webpack-plugin": "^2.30.1",
+    "rimraf": "^2.6.2",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.1"
+  },
+  "dependencies": {
+    "jquery": "^1.12.3",
+    "justgage": "^1.2.2",
+    "raphael": "^2.1.4"
+  }
+}
