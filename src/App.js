@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import justgage from "justgage"
-import raphael from "raphael"
+//import justgage from "justgage"
+//import raphael from "raphael"
 import './App.css';
 
 
@@ -21,8 +21,8 @@ class App extends Component {
                 <button id="T" className="button" type="button">Test Comms</button>
             </div>
             <div className="speedControl">
-                <label for="points">SPEED CONTROL</label>
-                <input type="range" id="speed_id" value="0" min="0" max="1023" onchange="connection.send(this.value)" />
+                <label htmlFor="points">SPEED CONTROL</label>
+                <input type="range" id="speed_id" value="0" min="0" max="1023" onChange="connection.send(this.value)" />
             </div>
         </div>
         </div>
