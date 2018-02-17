@@ -3,11 +3,6 @@
   "version": "0.0.1",
   "description": "This is a readme file for the LipSync_v2 code.",
   "main": "build/index.html",
-  "scripts": {
-    "prebuild": "rimraf build",
-    "build": "webpack",
-    "start": "webpack-dev-server"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mdwagner/Assist_IoT_ESP32_LipSync.git"
@@ -25,6 +20,7 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "compression-webpack-plugin": "^1.1.7",
@@ -39,5 +35,10 @@
   "dependencies": {
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
+  },
+  "scripts": {
+    "prebuild": "rimraf build",
+    "build": "webpack",
+    "start": "webpack-dev-server"
   }
 }
