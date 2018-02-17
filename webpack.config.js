@@ -1,6 +1,8 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const CompressionPlugin = require('compression-webpack-plugin');
 
 const PATHS = {
   src: path.join(__dirname, 'src', 'index.js'),
@@ -13,7 +15,7 @@ module.exports = {
   },
   output: {
     path: PATHS.build,
-    filename: "[name].js",
+    filename: '[name].js',
   },
   devServer: {
     stats: 'errors-only',
@@ -38,12 +40,16 @@ module.exports = {
       allChunks: true,
       filename: '[name].css'
     }),
+    new webpack.optimize.UglifyJsPlugin(),
     new HtmlWebpackPlugin({
       title: 'Welcome to the LipSync Omni Page',
-      template: 'src/template.html',
+      template: 'template.html',
       minify: {
         removeComments: true
       }
+    }),
+    new CompressionPlugin({
+      test: /\.jsx?$/
     })
   ],
 };
