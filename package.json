@@ -1,0 +1,23 @@
+{
+  "name": "assist_iot_esp32_lipsync",
+  "version": "0.0.1",
+  "description": "This is a readme file for the LipSync_v2 code.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdwagner/Assist_IoT_ESP32_LipSync.git"
+  },
+  "keywords": [
+    "arduino",
+    "esp32"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mdwagner/Assist_IoT_ESP32_LipSync/issues"
+  },
+  "homepage": "https://github.com/mdwagner/Assist_IoT_ESP32_LipSync#readme"
+}
