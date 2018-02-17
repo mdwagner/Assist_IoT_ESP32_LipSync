@@ -1,3 +1,11 @@
-import Relay from './relay.html';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './app.css';
 
-console.log('Hello world');
+const App = () => (
+  <div>
+    Hello World
+  </div>
+);
+
+ReactDOM.render(<App />, document.querySelector('#root'));
