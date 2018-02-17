@@ -12,7 +12,7 @@ class App extends Component {
         <div> 
             <div id="centerapp">
             <b>LipSync Omni Contoller</b>
-            <div className="container" >
+            <div className="container containerPlacement" >
                 <div id="g1" className="gauge"></div>
                 <button id="I" className="button" type="button">Mouse</button>
                 <button id="M" className="button" type="button">JoyStick</button>
@@ -20,7 +20,7 @@ class App extends Component {
                 <button id="R" className="button" type="button">Playstation</button>
                 <button id="T" className="button" type="button">Test Comms</button>
             </div>
-            <div>
+            <div className="speedControl">
                 <label for="points">SPEED CONTROL</label>
                 <input type="range" id="speed_id" value="0" min="0" max="1023" onchange="connection.send(this.value)" />
             </div>
