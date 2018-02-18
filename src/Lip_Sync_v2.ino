@@ -34,14 +34,14 @@ unsigned int state;
 #define DBG_OUTPUT_PORT Serial
 
 //***VARIABLE DECLARATIONS FOR WIFI***//
-const char WiFiAPPSK[] = "Candace1";
+//const char WiFiAPPSK[] = "Candace1";
 
 const char* host = "LipSync_v2";
 
 String Argument_Name, Clients_Response1, Clients_Response2;
 
-const char* ssid = "black";
-const char* password = "";
+const char* ssid = "ESP32ap";
+const char* password = "12345678";
 const char* accesspoint;
 
 //--------------------------------------
@@ -114,6 +114,17 @@ static BLEHIDDevice* hid;
 BLECharacteristic* input;
 uint8_t buttons = 0;
 bool connected = false;
+
+char res[3000] = 
+"<!DOCTYPE html>\n\
+<html>\n\
+<head>\n\
+<meta name='viewport' content='width=device-width, initial-scale=1'>\n\
+</head>\n\
+<body>\n\
+Test Me! n\
+</body>\n\
+</html>";
 
 class MyCallbacks : public BLEServerCallbacks {
   void onConnect(BLEServer* pServer){
@@ -279,29 +290,6 @@ bool handleFileRead(String path){
 
 void setupWiFi(const char* ssid, const char* password)
 {
-  
-  //NOTE: Saving this incase its needed later
-  /*
-  String AP_NameString = "LipSync";
-
-  char AP_NameChar[AP_NameString.length() + 1];
-  memset(AP_NameChar, 0, AP_NameString.length() + 1);
-
-  for (int i=0; i<AP_NameString.length(); i++)
-    AP_NameChar[i] = AP_NameString.charAt(i);*/
-
-/*   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
- 
-  
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.print(F("Connected! IP address: "));
-  Serial.println(WiFi.localIP()); */
-
   Serial.begin(115200);
   Serial.println();
   Serial.print("Configuring access point...");
@@ -436,7 +424,19 @@ void handle_showclientresponse() {
 }
 
 void setup() {
-  Serial.begin(115200);
+  setupWiFi(ssid, password);
+  
+  /* we use mDNS here http://esp32.local */
+  if (MDNS.begin("esp32")) {
+    Serial.println("MDNS responder started");
+  }
+  /* register callback function when user request root "/" */
+  server.on("/", handleRoot);
+
+  server.onNotFound(handleNotFound);
+  /* start web server */
+  server.begin();
+  Serial.println("HTTP server started");
 
 
   //***********************  WIP BEGIN  *******************
@@ -502,6 +502,18 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(32), click, CHANGE);
 
   xTaskCreate(taskServer, "server", 20000, NULL, 5, NULL);
+}
+
+/* this callback will be invoked when user request "/" */
+void handleRoot() {
+  /* server respond 200 with content "hello from ESP32!" */
+  //server.send(200, "text/plain", "hello from ESP32!");
+  server.send(200, "text/html", res);
+}
+
+void handleNotFound(){
+  String message = "File Not Found\n\n";
+  server.send(404, "text/plain", message);
 }
 
 void loop() {
