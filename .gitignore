@@ -1,7 +1,4 @@
 .pioenvs
 .piolibdeps
-.vscode/c_cpp_properties.json
-.vscode/launch.json
+.vscode/
 .DS_Store
-src/.DS_Store
-src/react/.DS_Store
