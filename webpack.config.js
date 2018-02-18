@@ -9,6 +9,7 @@ const FilterChunkWebpackPlugin = require('filter-chunk-webpack-plugin');
 const PATHS = {
   src: path.join(__dirname, 'src', 'index.js'),
   build: path.join(__dirname, 'build'),
+  template: path.join(__dirname, 'src', 'template.html')
 };
 
 module.exports = {
@@ -45,7 +46,7 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin(),
     new HtmlWebpackPlugin({
       title: 'Welcome to the LipSync Omni Page',
-      template: 'template.html',
+      template: PATHS.template,
       minify: {
         removeComments: true,
         minifyCSS: true,
