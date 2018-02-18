@@ -115,17 +115,6 @@ BLECharacteristic* input;
 uint8_t buttons = 0;
 bool connected = false;
 
-char res[3000] = 
-"<!DOCTYPE html>\n\
-<html>\n\
-<head>\n\
-<meta name='viewport' content='width=device-width, initial-scale=1'>\n\
-</head>\n\
-<body>\n\
-Test Me! n\
-</body>\n\
-</html>";
-
 class MyCallbacks : public BLEServerCallbacks {
   void onConnect(BLEServer* pServer){
     connected = true;
@@ -402,7 +391,6 @@ void handle_clientresponse()
   free(TempString);
 }
 
-
 //********************************************************************************
 // Web repsonse with users choice
 //********************************************************************************
@@ -424,6 +412,7 @@ void handle_showclientresponse() {
 }
 
 void setup() {
+
   setupWiFi(ssid, password);
   
   /* we use mDNS here http://esp32.local */
@@ -431,7 +420,7 @@ void setup() {
     Serial.println("MDNS responder started");
   }
   /* register callback function when user request root "/" */
-  server.on("/", handleRoot);
+  server.on("/", handle_showclientresponse);
 
   server.onNotFound(handleNotFound);
   /* start web server */
@@ -502,13 +491,6 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(32), click, CHANGE);
 
   xTaskCreate(taskServer, "server", 20000, NULL, 5, NULL);
-}
-
-/* this callback will be invoked when user request "/" */
-void handleRoot() {
-  /* server respond 200 with content "hello from ESP32!" */
-  //server.send(200, "text/plain", "hello from ESP32!");
-  server.send(200, "text/html", res);
 }
 
 void handleNotFound(){
