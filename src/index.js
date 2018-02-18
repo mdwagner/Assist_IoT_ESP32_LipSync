@@ -9,21 +9,24 @@ class App extends Component {
     this.state = {
       inputValue: 0
     };
-    // var connection = new WebSocket('ws://'+location.hostname+':81/', ['arduino']);
-    // var connection = new WebSocket('ws://192.168.4.1:81/', ['arduino']);
-    this.connection = new WebSocket('ws://0.0.0.0:5001');
+    // this.connection = new WebSocket('ws://0.0.0.0:5001'); // WebSocket Connection configuration
   }
 
   touchStart = (id) => {
-    // this.connection.send(`${id}`);
-    console.log(`${id}`);
+    // this.connection.send(`${id}`); // uncomment when `this.connection` is set correctly
+    console.log(`${id}`); // read out of text sent to WebSocket
   }
 
   inputChange = (e) => {
     if (e) {
       e.persist();
-      this.setState(prevState => Object.assign({}, prevState, { inputValue: e.target.value }),
-        this.touchStart(e.target.value));
+      const newValue = e.target.value;
+      this.setState(prevState => {
+        const newState = {
+          inputValue: newValue
+        };
+        return Object.assign({}, prevState, newState);
+      }, this.touchStart(newValue));
     }
   }
 
@@ -42,7 +45,13 @@ class App extends Component {
           </div>
           <div className={"speedControl"}>
             <label htmlFor={"points"}>SPEED CONTROL</label>
-            <input type={"range"} id={"speed_id"} value={this.state.inputValue} min={"0"} max={"1023"} onChange={this.inputChange} />
+            <input
+              type={"range"}
+              id={"speed_id"}
+              value={this.state.inputValue}
+              min={"0"}
+              max={"1023"}
+              onChange={this.inputChange} />
           </div>
         </div>
       </div>

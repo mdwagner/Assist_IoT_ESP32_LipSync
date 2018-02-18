@@ -1,8 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CompressionPlugin = require('compression-webpack-plugin');
+const FilterChunkWebpackPlugin = require('filter-chunk-webpack-plugin');
 
 const PATHS = {
   src: path.join(__dirname, 'src', 'index.js'),
@@ -45,11 +47,24 @@ module.exports = {
       title: 'Welcome to the LipSync Omni Page',
       template: 'template.html',
       minify: {
-        removeComments: true
-      }
+        removeComments: true,
+        minifyCSS: true,
+        minifyJS: true,
+        preserveLineBreaks: true,
+        collapseWhitespace: true
+      },
+      inlineSource: '.(js|css)$'
+
     }),
+    new HtmlWebpackInlineSourcePlugin(),
     new CompressionPlugin({
-      test: /\.jsx?$/
+      test: /\.html$/
+    }),
+    new FilterChunkWebpackPlugin({
+      patterns: [
+        '*.js',
+        '*.css'
+      ]
     })
   ],
 };
