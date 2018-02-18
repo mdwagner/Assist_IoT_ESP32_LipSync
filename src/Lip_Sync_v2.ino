@@ -235,7 +235,7 @@ const uint8_t mouse2_report[] = {
 
 
 // THIS IS TOO FANCY FOR OUR NEEDS BUT IT MIGHT BE USEFUL LATER ON....
-/*String getContentType(String filename){
+String getContentType(String filename){
   if(server.hasArg("download")) return "application/octet-stream";
   else if(filename.endsWith(".htm")) return "text/html";
   else if(filename.endsWith(".html")) return "text/html";
@@ -257,17 +257,15 @@ bool handleFileRead(String path){
   DBG_OUTPUT_PORT.println("handleFileRead: " + path);
   if(path.endsWith("/"))
     {
-      path += "relay.html";
+      path += "index.html.gz";
       state = SEQUENCE_IDLE;
     }
   String contentType = getContentType(path);
   DBG_OUTPUT_PORT.println("contenType = " + contentType);
-  String pathWithGz = path + ".gz";
-  DBG_OUTPUT_PORT.println("pathWithGz: = " + pathWithGz);
-  DBG_OUTPUT_PORT.println("PathFile: " + pathWithGz);
-  if(SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)){
-    if(SPIFFS.exists(pathWithGz))
-      path += ".gz";
+  // String pathWithGz = path + ".gz";
+  // DBG_OUTPUT_PORT.println("pathWithGz: = " + pathWithGz);
+  // DBG_OUTPUT_PORT.println("PathFile: " + pathWithGz);
+  if(SPIFFS.exists(path)){
     File file = SPIFFS.open(path, "r");
     DBG_OUTPUT_PORT.println("Path after SPIFF open = " + path);
     size_t sent = server.streamFile(file, contentType);
@@ -275,7 +273,7 @@ bool handleFileRead(String path){
     return true;
   }
   return false;
-}*/
+}
 
 void setupWiFi(const char* ssid, const char* password)
 {
@@ -420,7 +418,10 @@ void setup() {
     Serial.println("MDNS responder started");
   }
   /* register callback function when user request root "/" */
-  server.on("/", handle_showclientresponse);
+  //server.on("/", handle_showclientresponse);
+  server.on("/", HTTP_GET, [](){
+    handleFileRead("/");
+  });
 
   server.onNotFound(handleNotFound);
   /* start web server */
