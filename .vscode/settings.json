@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.osx": {
+        "PATH": "/Users/rhitgjjw/.platformio/penv/bin:/Users/rhitgjjw/.platformio/penv:/Users/rhitgjjw/.nvm/versions/node/v6.9.4/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/apache-maven-3.5.2/bin",
+        "PLATFORMIO_CALLER": "vscode"
+    }
+}
