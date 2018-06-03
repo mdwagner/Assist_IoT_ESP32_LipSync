@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import { render, h, Component } from 'preact';
 import './App.css';
 
 class App extends Component {
@@ -18,39 +17,36 @@ class App extends Component {
   }
 
   inputChange = (e) => {
-    if (e) {
-      e.persist();
-      const newValue = e.target.value;
-      this.setState(prevState => {
-        const newState = {
-          inputValue: newValue
-        };
-        return Object.assign({}, prevState, newState);
-      }, this.touchStart(newValue));
-    }
+    const newValue = e.target.value;
+    this.setState(prevState => {
+      const newState = {
+        inputValue: newValue
+      };
+      return Object.assign({}, prevState, newState);
+    }, this.touchStart(newValue));
   }
 
-  render() {
+  render(props, state) {
     return (
       <div>
-        <div id={"centerapp"}>
+        <div id="centerapp">
           <h1>LipSync Omni Contoller</h1>
-          <div className={"container containerPlacement"}>
-            <div id={"g1"} className={"gauge"}></div>
-            <button id={"I"} className={"button"} type={"button"} onClick={() => this.touchStart('I')}>Mouse</button>
-            <button id={"M"} className={"button"} type={"button"} onClick={() => this.touchStart('M')}>JoyStick</button>
-            <button id={"L"} className={"button"} type={"button"} onClick={() => this.touchStart('L')}>TV Remote</button>
-            <button id={"R"} className={"button"} type={"button"} onClick={() => this.touchStart('R')}>Playstation</button>
-            <button id={"T"} className={"button"} type={"button"} onClick={() => this.touchStart('T')}>Test Comms</button>
+          <div className="container containerPlacement">
+            <div id="g1" className="gauge"></div>
+            <button id="I" className="button" type="button" onClick={() => this.touchStart('I')}>Mouse</button>
+            <button id="M" className="button" type="button" onClick={() => this.touchStart('M')}>JoyStick</button>
+            <button id="L" className="button" type="button" onClick={() => this.touchStart('L')}>TV Remote</button>
+            <button id="R" className="button" type="button" onClick={() => this.touchStart('R')}>Playstation</button>
+            <button id="T" className="button" type="button" onClick={() => this.touchStart('T')}>Test Comms</button>
           </div>
-          <div className={"speedControl"}>
-            <label htmlFor={"points"}>SPEED CONTROL</label>
+          <div className="speedControl">
+            <label htmlFor="points">SPEED CONTROL</label>
             <input
-              type={"range"}
-              id={"speed_id"}
+              type="range"
+              id="speed_id"
               value={this.state.inputValue}
-              min={"0"}
-              max={"1023"}
+              min="0"
+              max="1023"
               onChange={this.inputChange} />
           </div>
         </div>
@@ -59,4 +55,4 @@ class App extends Component {
   }
 }
 
-ReactDOM.render(<App />, document.querySelector('#root'));
+render(<App />, document.getElementById('root'));
